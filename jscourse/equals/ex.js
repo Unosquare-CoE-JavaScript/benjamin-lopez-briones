@@ -1,7 +1,25 @@
 // TODO: write `findAll(..)`
 
-const findAll = () => {
+const findAll = (x,y) => {
+    //console.log(x);
+    let resp = [];
 
+    y.map( itm => {
+        if(Object.is(x, itm)){
+            resp.push(itm);
+        }
+        else if((typeof x == 'object' && x === null) || (x == undefined)){
+            if(x == itm) resp.push(itm);
+        }
+        else if (typeof x == "number" && !Object.is(x,-0) && !Object.is(x,NaN) && !Object.is(x,Infinity) && !Object.is(x,-Infinity) && typeof itm == "string" && itm.trim() != "") {
+            if(x == itm) resp.push(itm);
+        }
+        else if (typeof x == "string" && x.trim() != "" && typeof itm == "number" && !Object.is(-0,itm)) {
+            if(x == itm) resp.push(itm);
+        }
+    });
+
+    return resp;
 };
 
 // tests:
@@ -15,6 +33,7 @@ var values = [
 console.log(setsMatch(findAll(null,values),[null,undefined]) === true);
 console.log(setsMatch(findAll(undefined,values),[null,undefined]) === true);
 console.log(setsMatch(findAll(0,values),[0,"0"]) === true);
+
 console.log(setsMatch(findAll(-0,values),[-0]) === true);
 console.log(setsMatch(findAll(13,values),[13]) === true);
 console.log(setsMatch(findAll(42,values),[42,"42"]) === true);
