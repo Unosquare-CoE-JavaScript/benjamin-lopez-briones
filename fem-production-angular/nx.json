@@ -1,14 +1,18 @@
 {
-  "npmScope": "fem-production-angular",
+  "npmScope": "fem",
   "affected": {
     "defaultBase": "master"
   },
   "implicitDependencies": {
+    "angular.json": "*",
     "package.json": {
       "dependencies": "*",
       "devDependencies": "*"
     },
-    ".eslintrc.json": "*"
+    "tsconfig.base.json": "*",
+    "tslint.json": "*",
+    ".eslintrc.json": "*",
+    "nx.json": "*"
   },
   "tasksRunnerOptions": {
     "default": {
@@ -18,15 +22,14 @@
       }
     }
   },
-  "targetDependencies": {
-    "build": [
-      {
-        "target": "build",
-        "projects": "dependencies"
-      }
-    ]
-  },
   "projects": {
+    "dashboard": {
+      "tags": []
+    },
+    "dashboard-e2e": {
+      "tags": [],
+      "implicitDependencies": ["dashboard"]
+    },
     "api": {
       "tags": []
     },
@@ -39,14 +42,17 @@
     "core-state": {
       "tags": []
     },
-    "dashboard": {
+    "material": {
       "tags": []
     },
-    "dashboard-e2e": {
-      "tags": [],
-      "implicitDependencies": ["dashboard"]
+    "client": {
+      "tags": []
     },
-    "material": {
+    "client-e2e": {
+      "tags": [],
+      "implicitDependencies": ["client"]
+    },
+    "ui-toolbar": {
       "tags": []
     }
   }
