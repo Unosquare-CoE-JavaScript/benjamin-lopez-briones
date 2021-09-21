@@ -1,0 +1,12 @@
+C:\Users\benjamin.briones\projects\benjamin-lopez-briones\WizLib_Model\bin\Debug\net5.0\WizLib_Model.deps.json
+C:\Users\benjamin.briones\projects\benjamin-lopez-briones\WizLib_Model\bin\Debug\net5.0\WizLib_Model.dll
+C:\Users\benjamin.briones\projects\benjamin-lopez-briones\WizLib_Model\bin\Debug\net5.0\ref\WizLib_Model.dll
+C:\Users\benjamin.briones\projects\benjamin-lopez-briones\WizLib_Model\bin\Debug\net5.0\WizLib_Model.pdb
+C:\Users\benjamin.briones\projects\benjamin-lopez-briones\WizLib_Model\obj\Debug\net5.0\WizLib_Model.csproj.AssemblyReference.cache
+C:\Users\benjamin.briones\projects\benjamin-lopez-briones\WizLib_Model\obj\Debug\net5.0\WizLib_Model.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\benjamin.briones\projects\benjamin-lopez-briones\WizLib_Model\obj\Debug\net5.0\WizLib_Model.AssemblyInfoInputs.cache
+C:\Users\benjamin.briones\projects\benjamin-lopez-briones\WizLib_Model\obj\Debug\net5.0\WizLib_Model.AssemblyInfo.cs
+C:\Users\benjamin.briones\projects\benjamin-lopez-briones\WizLib_Model\obj\Debug\net5.0\WizLib_Model.csproj.CoreCompileInputs.cache
+C:\Users\benjamin.briones\projects\benjamin-lopez-briones\WizLib_Model\obj\Debug\net5.0\WizLib_Model.dll
+C:\Users\benjamin.briones\projects\benjamin-lopez-briones\WizLib_Model\obj\Debug\net5.0\ref\WizLib_Model.dll
+C:\Users\benjamin.briones\projects\benjamin-lopez-briones\WizLib_Model\obj\Debug\net5.0\WizLib_Model.pdb

@@ -1,0 +1,16 @@
+C:\Users\benjamin.briones\source\repos\FirstApp\bin\Release\net5.0\FirstApp.exe
+C:\Users\benjamin.briones\source\repos\FirstApp\bin\Release\net5.0\FirstApp.deps.json
+C:\Users\benjamin.briones\source\repos\FirstApp\bin\Release\net5.0\FirstApp.runtimeconfig.json
+C:\Users\benjamin.briones\source\repos\FirstApp\bin\Release\net5.0\FirstApp.runtimeconfig.dev.json
+C:\Users\benjamin.briones\source\repos\FirstApp\bin\Release\net5.0\FirstApp.dll
+C:\Users\benjamin.briones\source\repos\FirstApp\bin\Release\net5.0\ref\FirstApp.dll
+C:\Users\benjamin.briones\source\repos\FirstApp\bin\Release\net5.0\FirstApp.pdb
+C:\Users\benjamin.briones\source\repos\FirstApp\obj\Release\net5.0\FirstApp.csproj.AssemblyReference.cache
+C:\Users\benjamin.briones\source\repos\FirstApp\obj\Release\net5.0\FirstApp.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\benjamin.briones\source\repos\FirstApp\obj\Release\net5.0\FirstApp.AssemblyInfoInputs.cache
+C:\Users\benjamin.briones\source\repos\FirstApp\obj\Release\net5.0\FirstApp.AssemblyInfo.cs
+C:\Users\benjamin.briones\source\repos\FirstApp\obj\Release\net5.0\FirstApp.csproj.CoreCompileInputs.cache
+C:\Users\benjamin.briones\source\repos\FirstApp\obj\Release\net5.0\FirstApp.dll
+C:\Users\benjamin.briones\source\repos\FirstApp\obj\Release\net5.0\ref\FirstApp.dll
+C:\Users\benjamin.briones\source\repos\FirstApp\obj\Release\net5.0\FirstApp.pdb
+C:\Users\benjamin.briones\source\repos\FirstApp\obj\Release\net5.0\FirstApp.genruntimeconfig.cache
