@@ -770,3 +770,276 @@ forAgainstLet.print();
 
 As shown, ES modules can use classic modules internally if they need to support multiple-instantiation.
 
+#Chapter 3: Digging to the Roots of JS
+
+This chapter digs much deeper than you’re likely used to thinking about a programming language.
+
+## Iteration
+
+Since programs are essentially built to process data (and make decisions on that data), the patterns used to step through the data have a big impact on the program’s readability.
+The iterator pattern has been around for decades, and suggests a “standardized” approach to consuming data from a source one chunk at a time. The idea is that it’s more common and helpful to iterate the data source—to progressively handle the collection of data by processing the first part, then the next, and so on, rather than handling the entire set all at once.
+
+The iterator pattern defines a data structure called an “iterator” that has a reference to an underlying data source which exposes a method like next(). Calling next() returns the next piece of data.
+
+You don’t always know how many pieces of data that you will need to iterate through, so the pattern typically indicates completion by some special value or exception once you iterate through the entire set and go past the end.
+The importance of the iterator pattern is in adhering to a standard way of processing data iteratively, ES6 standardized a specific protocol for the iterator pattern directly in the language. The protocol defines a next() method whose return is an object called an iterator result; the object has value and done properties, where done is a boolean that is false until the iteration over the underlying data source is complete.
+
+### Consuming Iterators
+With the ES6 iteration protocol in place, it’s workable to consume a data source one value at a time, checking after each next() call for done to be true to stop the iteration. But this approach is rather manual, so ES6 also included several mechanisms (syntax and APIs) for standardized consumption of these iterators.
+
+One such mechanism is the for..of loop:
+
+```javascript
+// given an iterator of some data source:
+var it = /* .. */;
+// loop over its results one at a time
+for (let val of it) {
+    console.log(`Iterator value: ${ val }`);
+}
+// Iterator value: ..
+// Iterator value: ..
+// ..
+```
+
+Another mechanism that’s often used for consuming iterators is the ... operator. This operator actually has two symmetrical forms: spread and rest. The spread form is an iterator-consumer.
+
+To spread an iterator, you have to have something to spread it into. There are two possibilities in JS: an array or an argument list for a function call.
+
+An array spread:
+
+```javascript
+// spread an iterator into an array,
+// with each iterated value occupying
+// an array element position.
+var vals = [ ...it ];
+```
+
+A function call spread:
+
+```javascript
+// spread an iterator into a function,
+// call with each iterated value
+// occupying an argument position.
+doSomethingUseful( ...it );
+```
+
+In both cases, the iterator-spread form of ... follows the iterator-consumption protocol (the same as the for..of loop) to retrieve all available values from an iterator.
+
+## Iterables
+The iterator-consumption protocol is technically defined for consuming iterables. The protocol automatically creates an iterator instance from an iterable, and consumes just that iterator instance to its completion. This means a single iterable could be consumed more than once; each time, a new iterator instance would be created and used.
+
+ES6 defined the basic data structure/collection types in JS as iterables. This includes strings, arrays, maps, sets, and others.
+
+Consider:
+
+```javascript
+// an array is an iterable
+var arr = [ 10, 20, 30 ];
+for (let val of arr) {
+    console.log(`Array value: ${ val }`);
+}
+// Array value: 10
+// Array value: 20
+// Array value: 30
+```
+
+Since arrays are iterables, we can shallow-copy an array using iterator consumption via the ... spread operator:
+
+```javascript
+var arrCopy = [ ...arr ];
+```
+
+A Map data structure uses objects as keys, associating a value (of any type) with that object. Maps have a different default iteration than seen here, in that the iteration is not just over the map’s values but instead its entries. An entry is a tuple (2-element array) including both a key and a value.
+
+Consider:
+
+```javascript
+// given two DOM elements, `btn1` and `btn2`
+var buttonNames = new Map();
+buttonNames.set(btn1,"Button 1");
+buttonNames.set(btn2,"Button 2");
+for (let [btn,btnName] of buttonNames) {
+    btn.addEventListener("click",function onClick(){
+        console.log(`Clicked ${ btnName }`);
+    });
+}
+```
+
+In the for..of loop over the default map iteration, we use the [btn,btnName] syntax (called “array destructuring”) to break down each consumed tuple into the respective key-value pairs.
+
+For the most part, all built-in iterables in JS have three iterator forms available: keys-only (keys()), values-only (values()), and entries (entries()). Beyond just using built-in iterables, you can also ensure your own data structures adhere to the iteration protocol.
+
+## Closure
+Closure is when a function remembers and continues to access variables from outside its scope, even when the function is executed in a different scope.
+
+Perhaps without realizing it, almost every JS developer has made use of closure. In fact, closure is one of the most pervasive programming functionalities across a majority of languages. It might even be as important to understand as variables or loops; that’s how fundamental it is. We need to be able to recognize where closure is used in programs.
+
+We see two definitional characteristics here. First, closure is part of the nature of a function. Objects don’t get closures, functions do. Second, to observe a closure, you must execute a function in a different scope than where that function was originally defined.
+
+Consider:
+```javascript
+function greeting(msg) {
+return function who(name) {
+console.log(`${ msg }, ${ name }!`);
+};
+}
+var hello = greeting("Hello");
+var howdy = greeting("Howdy");
+hello("Kyle");
+// Hello, Kyle!
+hello("Sarah");
+// Hello, Sarah!
+howdy("Grant");
+// Howdy, Grant!
+```
+
+First, the greeting(..) outer function is executed, creating an instance of the inner function who(..); that function closes over the variable msg, which is the parameter from the outer scope of greeting(..). When that inner function is returned, its reference is assigned to the hello variable in the outer scope. Then we call greeting(..) a second time, creating a new inner function instance, with a new closure over a new msg, and return that reference to be assigned to howdy.
+
+When the greeting(..) function finishes running, normally we would expect all of its variables to be garbage collected (removed from memory). We’d expect each msg to go away, but they don’t. The reason is closure. Since the inner function instances are still alive (assigned to hello and howdy, respectively), their closures are still preserving the msg variables. These closures are not a snapshot of the msg variable’s value; they are a direct link and preservation of the variable itself. That means closure can actually observe (or make!) updates to these variables over time. Closure is most common when working with asynchronous code, such as with callbacks. 
+
+Consider:
+
+```javascript
+function getSomeData(url) {
+    ajax(url,function onResponse(resp){
+        console.log(
+            `Response (from ${ url }): ${ resp }`
+        );
+    });
+}
+getSomeData("https://some.url/wherever");
+// Response (from https://some.url/wherever): ...
+```
+The inner function onResponse(..) is closed over url, and thus preserves and remembers it until the Ajax call returns and executes onResponse(..). Even though getSomeData(..) finishes right away, the url parameter variable is kept alive in the closure for as long as needed.
+It’s not necessary that the outer scope be a function—it usually is, but not always—just that there be at least one variable in an outer scope accessed from an inner function:
+
+```javascript
+for (let [idx,btn] of buttons.entries()) {
+    btn.addEventListener("click",function onClick(){
+        console.log(`Clicked on button (${ idx })!`);
+    });
+}
+```
+
+Because this loop is using let declarations, each iteration gets new block-scoped (aka, local) idx and btn variables.
+Closure is one of the most prevalent and important programming patterns in any language. But that’s especially true of JS; it’s hard to imagine doing anything useful without leveraging closure in one way or another.
+
+## this Keyword
+One of JS’s most powerful mechanisms is also one of its most misunderstood: the this keyword. One common misconception is that a function’s this refers to the function itself. Because of how this works in other languages, another  misconception is that this points the instance that a methodbelongs to. Both are incorrect.
+
+As discussed previously, when a function is defined, it is attached to its enclosing scope via closure. Scope is the set of rules that controls how references to variables are resolved.But functions also have another characteristic besides their scope that influences what they can access. This characteristic is best described as an execution context, and it’s exposed to the function via its this keyword. 
+Scope is static and contains a fixed set of variables available at the moment and location you define a function
+
+this is not a fixed characteristic of a function based on the function’s definition, but rather a dynamic characteristic that’s determined each time the function is called. One way to think about the execution context is that it’s a tangible object whose properties are made available to a function while it executes. Compare that to scope, which  can also be thought of as an object; except, the scope object is hidden inside the JS engine, it’s always the same for that function, and its properties take the form of identifiervariables available inside the function.
+
+```javascript
+function classroom(teacher) {
+    return function study() {
+        console.log(
+            `${ teacher } says to study ${ this.topic }`
+        );
+    };
+}
+var assignment = classroom("Kyle");
+```
+
+The outer classroom(..) function makes no reference to a this keyword, so it’s just like any other function we’ve seen so far. But the inner study() function does reference this, which makes it a this-aware function. In other words, it’s a function that is dependent on its execution context.
+
+The inner study() function returned by classroom("Kyle") is assigned to a variable called assignment. So how can assignment() (aka study()) be called?
+
+```javascript
+assignment();
+// Kyle says to study undefined -- Oops :(
+```
+
+In this snippet, we call assignment() as a plain, normal function, without providing it any execution context. Since this program is not in strict mode, context-aware functions that are called without any context specified default the context to the global object (window in the browser).
+
+The benefit of this-aware functions—and their dynamic context—is the ability to more flexibly re-use a single function with data from different objects. A function that closes over a scope can never reference a different scope or set of variables. But a function that has dynamic this context awareness can be quite helpful for certain tasks.
+
+## Prototypes
+
+Where this is a characteristic of function execution, a prototype is a characteristic of an object, and specifically resolution of a property access. Think about a prototype as a linkage between two objects; the linkage is hidden behind the scenes, though there are ways to expose and observe it. This prototype linkage occurs when an object is created.
+
+A series of objects linked together via prototypes is called the “prototype chain.” The purpose of this prototype linkage  is so that accesses against B for properties/methods that B does not have, are delegated to A to handle. Delegation of property/method access allows two (or more!) objects to cooperate with each other to perform a task.
+
+Consider defining an object as a normal literal:
+
+```javascript
+var homework = {
+    topic: "JS"
+};
+```
+
+The homework object only has a single property on it: topic. However, its default prototype linkage connects to the Object.prototype object, which has common built-in methods on it like toString() and valueOf(), among others.
+We can observe this prototype linkage delegation from homework to Object.prototype: 
+
+```javascript
+homework.toString(); // [object Object] 
+```
+
+homework.toString() works even though homework doesn’t have a toString() method defined.
+
+## Object Linkage
+To define an object prototype linkage, you can create the object using the Object.create(..) utility:
+
+```javascript
+var homework = {
+    topic: "JS"
+};
+var otherHomework = Object.create(homework);
+otherHomework.topic; // "JS"
+```
+
+The first argument to Object.create(..) specifies an object to link the newly created object to, and then returns the newly created (and linked!) object.
+Delegation through the prototype chain only applies for accesses to lookup the value in a property. If you assign to a property of an object, that will apply directly to the object regardless of where that object is prototype linked to. Object.create(null) creates an object that is not prototype linked anywhere, so it’s purely just a standalone object.
+
+## this Revisited
+We covered the this keyword earlier, but its true importance shines when considering how it powers prototype-delegated function calls. Indeed, one of the main reasons this supports dynamic context based on how the function is called is so that method calls on objects which delegate through the prototype chain still maintain the expected this.
+Consider:
+
+```javascript
+var homework = {
+    study() {
+        console.log(`Please study ${ this.topic }`);
+    }
+};
+var jsHomework = Object.create(homework);
+jsHomework.topic = "JS";
+jsHomework.study();
+// Please study JS
+var mathHomework = Object.create(homework);
+mathHomework.topic = "Math";
+mathHomework.study();
+// Please study Math 
+```
+
+The two objects jsHomework and mathHomework each prototype link to the single homework object, which has the study() function. jsHomework and mathHomework are each given their own topic property.
+
+jsHomework.study() delegates to homework.study(), but its this (this.topic) for that execution resolves to jsHomework because of how the function is called, so this.topic is "JS". Similarly for mathHomework.study() delegating to homework.study() but still resolving this to mathHomework, and thus this.topic as "Math". The preceding code snippet would be far less useful if this was resolved to homework. Yet, in many other languages, it would seem this would be homework because the study() method is indeed defined on homework. Unlike many other languages, JS’s this being dynamic is a critical component of allowing prototype delegation.
+
+# Chapter 4: The Bigger Picture
+
+## Pillar 1: Scope and Closure
+
+The organization of variables into units of scope (functions, blocks) is one of the most foundational characteristics of any language; Scopes are like buckets, and variables are like marbles you put into those buckets. The scope model of a language is like the rules that help you determine which color marbles go in which matching-color buckets.
+
+Scopes nest inside each other, only variables at that level of scope nesting, or in higher/outer scopes, are accessible; variables from lower/inner scopes are hidden and inaccessible. This is how scopes behave in most languages, which is called lexical scope.
+
+JS is lexically scoped, though many claim it isn’t, because of two particular characteristics of its model that are not present in other lexically scoped languages. The first is commonly called hoisting: when all variables declared anywhere in a scope are treated as if they’re declared at the beginning of the scope. The other is that var-declared variables are function scoped, even if they appear inside a block.
+
+let/const declarations have a peculiar error behavior called the “Temporal Dead Zone” (TDZ) which results in observable but unusable
+variables. Though TDZ can be strange to encounter, it’s also not an invalidation of lexical scoping.
+
+Closure is a natural result of lexical scope when the language has functions as first-class values, as JS does. When a function makes reference to variables from an outer scope, and that function is passed around as a value and executed in other scopes, it maintains access to its original scope variables; this is closure.
+
+## Pillar 2: Prototypes
+The second pillar of the language is the prototypes system.
+JS is one of very few languages where you have the option to create objects directly and explicitly, without first defining their structure in a class.
+
+Classes are just one pattern you can build on top of such power. But another approach, in a very different direction, is to simply embrace objects as objects, forget classes altogether, and let objects cooperate through the prototype chain. This is called behavior delegation. And the rest goes to functional programming (FP), as the sort of “anticlass” way of designing programs.
+
+## Pillar 3: Types and Coercion
+The third pillar of JS is by far the most overlooked part of JS’s nature. The vast majority of developers have strong misconceptions about how types work in programming languages, and especially how they work in JS.
+
+Arguably, this pillar is more important than the other two, in the sense that no JS program will do anything useful if it doesn’t properly leverage JS’s value types, as well as the conversion (coercion) of values between types.
+
