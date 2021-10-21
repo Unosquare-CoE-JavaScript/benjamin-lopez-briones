@@ -15,13 +15,13 @@
         Here is where I upload all my practices and document what technologies I currently use, from the Center Of Excellence of JavaScript in Unosquare.
         Here you'll find my practice projects and annotations from books:
     </p>
-    <ol>
-        <li>[Deep JavaScript Foundations]()</li>
-        <li>[Angular Testing Masterclass]()</li>
-        <li>[Production-Grade Angular]()</li>
-        <li>[Asp.Net Core (Web API)]()</li>
-        <li>[Complete Asp.Net Core and EnJty Framework]()</li>
-        <li>[Unit TesJng with xUnit and MOQ]()</li>
-        <li>[Entity Framework Core – The Complete Guide]()</li>
+    <ol align="center">
+        <li><a href="https://github.com/Unosquare-CoE-JavaScript/benjamin-lopez-briones/tree/main/Deep%20JS%20Foundations/jscourse">Deep JavaScript Foundations</a></li>
+        <li><a href="https://github.com/Unosquare-CoE-JavaScript/benjamin-lopez-briones/tree/main/Angular%20testing%20masterclass/angular-testing">Angular Testing Masterclass</a></li>
+        <li><a href="https://github.com/Unosquare-CoE-JavaScript/benjamin-lopez-briones/tree/main/Production%20grade%20Angular/fem-production-angular">Production-Grade Angular</a></li>
+        <li><a href="https://github.com/Unosquare-CoE-JavaScript/benjamin-lopez-briones/tree/main/Asp.net%20Core%20web%20API/Netcoreaaa">Asp.Net Core (Web API)</a></li>
+        <li><a href="https://github.com/Unosquare-CoE-JavaScript/benjamin-lopez-briones/tree/main/Complete%20ASP.NET%20Core%20and%20Entity%20Framework%20Development/leave-management">Complete Asp.Net Core and EnJty Framework</a></li>
+        <li><a href="https://github.com/Unosquare-CoE-JavaScript/benjamin-lopez-briones/tree/main/Unit%20Testing%20.Net%20Core%20Applications%20with%20xUnit%20.net%20%26%20MOQ">Unit TesJng with xUnit and MOQ</a></li>
+        <li><a href="https://github.com/Unosquare-CoE-JavaScript/benjamin-lopez-briones/tree/main/EFCore%20-%20The%20complete%20Guide">Entity Framework Core – The Complete Guide</a></li>
     </ol>
 </div>
